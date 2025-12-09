@@ -1,0 +1,3 @@
+ansible-galaxy role install ahmed01123376676-cmd.nginx-role
+
+https://github.com/ahmed01123376676-cmd/nginx-role

@@ -1,0 +1,92 @@
+
+### Exercise 1: Shell Scripting
+
+#!/bin/bash
+
+read -p "Enter the directory path to back up: " dir
+
+backup_dir="/tmp/backup_$(basename "$dir")"
+mkdir -p "$backup_dir"
+cp -r "$dir"/* "$backup_dir"
+
+tar_file="${backup_dir}.tar.gz"
+tar -czf "$tar_file" -C "$(dirname "$backup_dir")" "$(basename "$backup_dir")"
+
+
+size=$(du -h "$tar_file" | cut -f1)
+echo "Backup completed! File: $tar_file (Size: $size)"
+
+
+echo "Backup of '$dir' completed successfully. Size: $size"
+
+--------------------------------------------------------------------------------------------------
+
+#Exercise 2: System Monitoring
+
+#!/bin/bash
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+
+# disk use
+disk_use=$( df / | tail -1 | awk '{print $5}' | sed 's/%//')
+
+if [ "$disk_use" -gt 80 ]; then
+echo "$DATE [ALERT] disk use ${disk_use}%"
+fi
+
+# memory use 
+ mem=$(free | grep Mem | awk '{printf("%.2f%%", $3/$2 * 100.0)}')
+ if [ "$mem" -gt 90 | bc -l ]; then
+echo "$DATE [ALERT] memory use ${mem} % "
+ fi
+
+ #cpu loud
+ cpu=$(awk '{print $1}' /proc/loadavg)
+ if [ "$cpu" -gt 5.0 | bc -l ]; then
+echo "$DATE [ALERT] cpu loud is ${cpu} > 5.0"
+ fi
+
+ # Every 5 minutes
+*/5 * * * * /usr/local/bin/system_monitor.sh
+
+-----------------------------------------------------------------------------------
+#Exercise 5: Troubleshooting
+
+#!/bin/bash
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+
+echo "$DATE - Running Troubleshooting Scan"
+
+ #cpu loud
+ cpu=$(awk '{print $1}' /proc/loadavg)
+ if [ "$cpu" -gt 5.0 | bc -l ]; then
+          echo "  High CPU Load Detected: $cpu"
+          else
+    echo " CPU Load Normal ($cpu)"
+ fi
+
+
+ # memory use
+ mem=$(free | grep Mem | awk '{printf("%.2f%%", $3/$2 * 100.0)}')
+ if [ "$mem" -gt 90 | bc -l ]; then
+echo "High Memory Usage ${mem} % "
+else
+    echo "✅ Memory Usage Normal ${mem}"
+ fi
+
+ # disk use
+disk_use=$( df / | tail -1 | awk '{print $5}' | sed 's/%//')
+
+if [ "$disk_use" -gt 80 ]; then
+echo "High Disk Usage: ${disk_use}%"
+else
+    echo "Disk Usage Normal ${disk_use}%"
+fi
+
+#Check Network
+ping -c 4 8.8.8.8
+if [ $? -ne 0 ]; then
+  echo "Network problem"
+else
+  echo "Network OK"
+fi
+~                                                                                                  

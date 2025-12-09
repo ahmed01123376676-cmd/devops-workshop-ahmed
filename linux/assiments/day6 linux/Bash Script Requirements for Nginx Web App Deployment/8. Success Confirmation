@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+ domain="myapp"
+ url="http://$domain"
+
+ if systemctl is-active --quiet nginx; then
+  echo " Nginx is running."
+else
+  echo " Nginx service is not running"
+  exit 1
+fi
+
+echo "Verifying web appliction"
+response=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+
+if [ "$response" -eq 200 ]; then
+  echo " Deployment Successful!"
+  echo " Access it at: $url"
+else
+  echo " Deployment completed but site returned HTTP $response."
+  echo "Please check Nginx logs"
+fi
+~                                                                                     
+~                                                                                     
+~                         
